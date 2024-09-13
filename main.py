@@ -2,16 +2,12 @@ import sys
 import sqlite3
 import encryptor
 import os
-'''
-For some reason this will work on my windows machine but not linux machine.
 
-'''
 
 
 # Constants
 DB_FILE = "Sqlite3.db"
 e = encryptor
-
 
 # Connect to the database
 def connect_db():
@@ -55,14 +51,18 @@ def ret_passwd(conn):
     
     conn.commit()
 
-# Generate and store a new password entry
-def gen_passwd(conn):
+
+
+
+
+# ADD and store a new password entry
+def add_passwd(conn):
     cursor = conn.cursor()
 
     # Ensure proper argument length
     if len(sys.argv) < 5:
 
-        print("Usage: python script.py GEN <USER> <PASSWORD> <SITE>")
+        print("Usage: python script.py ADD <USER> <PASSWORD> <SITE>")
 
         sys.exit(1)
 
@@ -90,10 +90,41 @@ def gen_passwd(conn):
     
     conn.commit()
 
+
+def generate_password():
+    import random
+    import string
+
+    global conn  # Ensure conn is treated as a global variable
+    cursor = conn.cursor()
+    
+    try:
+        length = int(input("Enter the desired password length: "))
+        user_value = input("Enter the username for the generated password: ")
+        site_value = input("Enter the site for the generated password: ")
+        
+        characters = string.ascii_letters + string.digits + string.punctuation
+        password = ''.join(random.choice(characters) for i in range(length))
+        
+        # Encrypt the password before storing
+        encrypted_password = e.Encrypt(password)
+        
+        cursor.execute('''INSERT INTO PASSWORDS (USER, VALUE, SITE) VALUES (?, ?, ?)''',
+                       (user_value, encrypted_password, site_value))
+        
+        # Commit the transaction to save the changes
+        conn.commit()
+        
+        print("Generated password:", password)
+        
+    except Exception as ex:
+        print(f"An error occurred: {ex}")
+        conn.rollback()  # Rollback in case of error
+
 if __name__ == '__main__':
 
     # Ensure method is provided
-    if len(sys.argv) < 2:
+    if len(sys.argv) < 2 or sys.argv[1].upper() not in ["ADD", "RET", "GEN"]:
 
         print("Usage: python script.py <GEN|RET>")
 
@@ -111,14 +142,17 @@ if __name__ == '__main__':
         print("Key already exists.")
 
     build_db(conn)
-
     if method == "GEN":
-        gen_passwd(conn)
+        generate_password()
+        # add the generated password to the database
+        
+    if method == "ADD":
+        add_passwd(conn)
     elif method == "RET":
         print("Retrieving stored passwords:")
         ret_passwd(conn)
-    else:
-        print("Invalid method. Use 'GEN' to generate or 'RET' to retrieve.")
+ 
+        
 
     # Close the connection at the end
     conn.close()
