@@ -12,3 +12,9 @@ python3 main.py GEN <username> <password> <site>
 
 python3 main.py RET
 - this will return all the passwords stored in the database unencrypted
+
+![image](https://github.com/user-attachments/assets/dec66c14-fae7-46e8-8aad-3da64e91a73f)
+
+Encrypted value stored in DB
+
+![image](https://github.com/user-attachments/assets/3155f668-e850-479a-9bcd-6750194b9b15)
