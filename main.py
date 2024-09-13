@@ -106,7 +106,7 @@ if __name__ == '__main__':
     #if the key is not generated yet, generate it
 
     if os.path.exists("secret.key") == False:
-        e.GenerateKey()
+        e.generate_key()
     else:
         print("Key already exists.")
 
