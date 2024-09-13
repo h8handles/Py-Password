@@ -1,7 +1,7 @@
 import sys
 import sqlite3
 import encryptor
-
+import os
 '''
 For some reason this will work on my windows machine but not linux machine.
 
@@ -103,6 +103,12 @@ if __name__ == '__main__':
 
     conn = connect_db()
 
+    #if the key is not generated yet, generate it
+
+    if os.path.exists("secret.key") == False:
+        e.GenerateKey()
+    else:
+        print("Key already exists.")
 
     build_db(conn)
 
