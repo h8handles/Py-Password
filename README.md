@@ -7,10 +7,14 @@ add functionality to generation function in main.py to randomly generate passwor
 
 ### Usage
 
-python3 main.py GEN <username> <password> <site>
+`python3 main.py ADD <username> <password> <site>`
 - this will add an encrypted password to the database
 
-python3 main.py RET
+`python3 main.py GEN`
+- will prompt you for a length, user and site
+- stores that generated password encrypted in the DB 
+
+`python3 main.py RET`
 - this will return all the passwords stored in the database unencrypted
 
 ![image](https://github.com/user-attachments/assets/dec66c14-fae7-46e8-8aad-3da64e91a73f)
